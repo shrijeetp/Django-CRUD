@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-5">
+<div class="container" style="background-color: lightblue;border:1px solid black;width: 642px;padding-top: 20px;padding-bottom: 20px;padding-left: 20px;padding-right: 20px;margin-top: 20px;margin-right: 0px;margin-left: 20px;">
+    <label align="right"> Id :</label>
+
+        <input type="text" id="Id" name="Id" size="15"/>&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" id="Search" class="btn-primary" value="Search">Search</button><br> <br>
+
+        <label align="right"> Firstname :</label>
+<input type="text" class="input" id="firstname" name="firstname" size="15"/> <br> <br>
+<label align="right"> Lastname: </label>
+<input type="text" id="lastname" name="lastname" size="15"/> <br> <br>
+<label align="right">
+Gender :
+</label><br>
+<input type="radio" name="Gender" id="Male" value="Male"/> Male <br>
+<input type="radio" name="Gender" id="Female" value="Female"/> Female <br>
+<input type="radio" name="Gender" id="Other" value="Other"/> Other
+<br>
+<br>
+
+<label align="right">
+Phone :
+</label>
+<input type="text" id="phone" name="phone" size="10"/> <br> <br>
+        <label align="right">
+Address :
+</label>
+<br>
+<textarea cols="50" rows="5" value="address" id="address" name="address">
+</textarea>
+<br> <br>
+        <label align="right">
+Email:
+</label>
+
+<input type="email" id="email" name="email"/> <br>
+<br> <br>
+ <label align="right">
+Password:
+</label>&nbsp;&nbsp;
+<input type="Password" id="password" name="password"> <br>
+<br> <br>
+<label align="right">
+Re-type password:
+</label>
+
+<input type="Password" id="repass" name="repass"> <br> <br>
+<input type="button" id="submit" class="btn btn-success" value="Submit" />&nbsp;&nbsp; &nbsp;&nbsp;<input type="button" class="btn btn-default" value="cancel"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-info" id="update" value="update"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="update2" class="btn btn-warning" value="update2"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-danger" id="delete" value="delete"/>
+    </div>
+        </div>
+   <div class="col-sm-7" style="
+    width: 820px;
+    margin-top: 20px;
+    margin-left: 20px;
+">
+    <div style="overflow-x:auto;">
+            <table class="table table-bordered" border="1px solid black">
+                <thead>
+                <tr>
+
+                    <th scope="col">Sr.No.
+                    </th>
+                    <th scope="col">Customer ID
+                    </th>
+                    <th scope="col">Name
+                    </th>
+                    <th scope="col">Gender
+                    </th>
+                    <th scope="col">address
+                    </th>
+                    <th scope="col">email
+                    </th>
+                    <th scope="col">password
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="myTable" id="id_table">
+
+
+                </tbody>
+
+            </table>
+        </div>
+   </div>
+    </div>
+</form>
+<script>
+$(document).ready(function(){
+$("#delete").hide()
+$("#update").hide()
+$("#update2").hide()
+  $("#Search").click(function(){
+    $("#delete").show("slow", function(){});
+    $("#update").show("slow", function(){});
+    $("#update2").show("slow", function(){});
+    $("#submit").hide("hide", function(){});
+  });
+});
+</script>
+<script>
+$( document ).ready(function() {
+f1()
+});
+$("#submit").click(function(){
+        var firstname = $("#firstname").val();
+        var lastname = $("#lastname").val();
+        var Gender = $("input[name='Gender']:checked").val();
+
+        var Id = parseInt($("#Id").val());
+        var phone = $("#phone").val();
+        var address = $("#address").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var repass = $("#repass").val();
+                $.ajax({
+                        url: '{% url "customerregmodel-list" %}',
+                        type: 'post',
+                        data: {
+                            "firstname": firstname,
+                            "lastname": lastname,
+                            "Gender":Gender,
+                            "phone":phone,
+                             "address":address,
+                             "email":email,
+                             "password":password,
+                             "repass":repass,
+                            },
+                        dataType: 'json',
+
+                        success: function(data) {
+                        f1();
+                            alert("Data save successfully!!");
+                            console.log(data)
+                            $("#address").val(data.address);
+                        },
+                        error: function(data) {
+                           console.log(data)
+
+                        }
+                });
+
+        });
+
+</script>
+<script>
+$("#Search").click(function(){
+        var firstname = $("#firstname").val();
+        var lastname = $("#lastname").val();
+        var Gender = $("input[name='Gender']:checked").val();
+
+        var Id = parseInt($("#Id").val());
+        var phone = $("#phone").val();
+        var address = $("#address").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var repass = $("#repass").val();
+         $.ajax({
+                        url: '{% url "customerregmodel-list" %}'+Id,
+                        type: 'get',
+                        data: {
+                            },
+                        dataType: 'json',
+
+                        success: function(data) {
+                            console.log(data)
+                            $("#firstname").val(data.firstname);
+                            $("#lastname").val(data.lastname);
+                             if(data.Gender == 'Male')
+                                {$("#Male"). prop('checked', true);}
+
+                             if(data.Gender == 'Female')
+                             {$("#Female"). prop('checked', true);}
+                             if(data.Gender == 'Other'){$("#Other"). prop('checked', true);}
+                            $("#Gender").val(data.Gender);
+                            $("#phone").val(data.phone);
+                            $("#address").val(data.address);
+                            $("#email").val(data.email);
+                            $("#password").val(data.password);
+                            $("#repass").val(data.repass);
+                            f1();
+                        },
+                        error: function(data) {
+                           console.log(data)
+
+                        }
+                });
+
+        });
+
+</script>
+<script>
+$("#update").click(function(){
+        var firstname = $("#firstname").val();
+        var lastname = $("#lastname").val();
+        var Gender = $("input[name='Gender']:checked").val();
+
+        var Id = parseInt($("#Id").val());
+        var phone = $("#phone").val();
+        var address = $("#address").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var repass = $("#repass").val();
+                $.ajax({
+                        url: '{% url "customerregmodel-list" %}'+Id+"/",
+                        type: 'put',
+                        data: {
+                            "firstname": firstname,
+                            "lastname": lastname,
+                            "Gender":Gender,
+                            "phone":phone,
+                             "address":address,
+                             "email":email,
+                             "password":password,
+                             "repass":repass,
+                            },
+                        dataType: 'json',
+
+                        success: function(data) {
+                            alert("Data save successfully!!");
+                            console.log(data)
+                            $("#address").val(data.address);
+                            f1();
+                        },
+                        error: function(data) {
+                           console.log(data)
+
+                        }
+                });
+
+        });
+
+</script>
+<script>
+$("#delete").click(function(){
+        var firstname = $("#firstname").val();
+        var lastname = $("#lastname").val();
+        var Gender = $("input[name='Gender']:checked").val();
+
+        var Id = parseInt($("#Id").val());
+        var phone = $("#phone").val();
+        var address = $("#address").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var repass = $("#repass").val();
+        //console.log(user,msg,title)
+
+
+
+                $.ajax({
+                        url: '{% url "customerregmodel-list" %}'+Id+"/",
+                        type: 'delete',
+                        data: {
+
+                            },
+                        dataType: 'json',
+
+                        success: function(data) {
+                            alert("Data deleted successfully!!");
+                            f1();
+                            console.log(data)
+                           /// $("#address").val(data.address);
+                        },
+                        error: function(data) {
+                           console.log(data)
+
+                        }
+                });
+
+        });
+
+</script>
+<script>
+function f1(){
+
+                $.ajax({
+                        url: '{% url "customerregmodel-list" %}',
+                        type: 'get',
+                        data: {},
+                        dataType: 'json',
+
+                       success: function(data) {
+                                    var alldata22 = "";
+                                    var num = 0;
+                                    for (var i = 0; i < data.length; i++) {
+
+                                        num += 1;
+
+                                        alldata22 += '<tr id="tblrow-' + data[i].id + '"><th scope="col">' + num + '</td><th scope="col">' + data[i].id + '</td><th scope="col">' + data[i].firstname + '-' + data[i].lastname + '</td> <th scope="col">' + data[i].Gender + '</td><th scope="col">' + data[i].address + '</td><th scope="col">' + data[i].email + '</td><th scope="col">' + data[i].password + '</td></tr>';
+                                    }
+                                    document.getElementById('id_table').innerHTML = alldata22;
+                                },
+                        error: function(data) {
+                           console.log(data)
+
+                        }
+                });
+
+        }
+
+</script>
+
+
+</body>
+</html>
